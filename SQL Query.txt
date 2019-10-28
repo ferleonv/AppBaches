@@ -1,0 +1,5 @@
+SELECT count(id) from reporte WHERE estatus='No Atendido';                                // Numeros de reportes no atendidos
+SELECT count(id) from reporte WHERE estatus='Atendido';                                   // Numeros de reportes atendidos
+INSERT INTO user (nombre, apellido, correo, password) VALUES (?, ?, ?, ?)                 // Registrar Usuario
+SELECT * FROM `reporte` WHERE fecha BETWEEN '2019-10-22' AND '2019-10-25' ORDER BY fecha  // Por fecha
+SELECT * FROM `reporte` WHERE id_user='lferht@gmail.com'                                  // Reporte por usuario
