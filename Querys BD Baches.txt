@@ -1,5 +1,0 @@
-SELECT reporte.ID, reporte.fecha, reporte.latitud, reporte.longitud, reporte.estatus, reporte.id_user, user.Id, user.Nombre FROM reporte INNER JOIN user ON reporte.Id_user AND user.Id='1';
-
-SELECT reporte.ID, reporte.fecha, reporte.latitud, reporte.longitud, reporte.estatus, reporte.id_user FROM reporte WHERE reporte.estatus='Atendido';
-
-SELECT reporte.ID, reporte.fecha, reporte.latitud, reporte.longitud, reporte.estatus, reporte.id_user, user.Id, user.Nombre FROM reporte INNER JOIN user ON reporte.Id_user AND user.Id='1' WHERE reporte.estatus='Atendido';
