@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-10-2019 a las 19:13:56
--- Versión del servidor: 10.1.38-MariaDB
--- Versión de PHP: 7.3.3
+-- Tiempo de generación: 30-10-2019 a las 06:38:36
+-- Versión del servidor: 10.4.8-MariaDB
+-- Versión de PHP: 7.3.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `appbaches2`
+-- Base de datos: `appbaches`
 --
 
 -- --------------------------------------------------------
@@ -78,7 +78,7 @@ CREATE TABLE `user` (
   `Nombre` varchar(30) NOT NULL,
   `Apellido` varchar(30) NOT NULL,
   `Password` varchar(30) NOT NULL,
-  `user_type` varchar(20) NOT NULL DEFAULT 'Ciudadano'
+  `user_type` tinyint(1) DEFAULT NULL COMMENT '0 = admin, 1 o cualquier no. = ciudadano'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -86,11 +86,12 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`Correo`, `Nombre`, `Apellido`, `Password`, `user_type`) VALUES
-('a216200258@alumnos.unison.com', 'Abel', 'Pacheco', '6756', 'Ciudadano'),
-('a216201598@alumnos.unison.mx', 'Fernando', 'Trujillo', '456', 'Ciudadano'),
-('davidagp20@gmail.com', 'David', 'Galvez', '23451', 'Ciudadano'),
-('jesus.pesqueira@gmail.com', 'Jesus', 'Pesqueira', '0909', 'Ciudadano'),
-('lferht@gmail.com', 'Luis', 'Hinojosa', '123', 'Ciudadano');
+('a216200258@alumnos.unison.com', 'Abel', 'Pacheco', '6756', 1),
+('a216201598@alumnos.unison.mx', 'Fernando', 'Trujillo', '456', 1),
+('cidue@aytohmo.com', 'cidue', 'cidue', 'admin', 0),
+('davidagp20@gmail.com', 'David', 'Galvez', '23451', 1),
+('jesus.pesqueira@gmail.com', 'Jesus', 'Pesqueira', '0909', 1),
+('lferht@gmail.com', 'Luis', 'Hinojosa', '123', 1);
 
 --
 -- Índices para tablas volcadas
@@ -133,3 +134,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
