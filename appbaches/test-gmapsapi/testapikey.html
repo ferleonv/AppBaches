@@ -1,0 +1,86 @@
+/*
+
+More information can be found here:
+https://developers.google.com/maps/documentation/javascript/places
+
+AN API KEY is required, which you can generate through the Google Cloud Platform.
+This currently requires an account and billing information, but for our purposes,
+it will not cost you anything to perform these API requests.
+
+You can read more about the process of generating the API key here:
+https://developers.google.com/maps/documentation/javascript/get-api-key
+
+REMEMBER, do not share your API key on any files that you are hosting publically,
+particularly on Github. It will not cost you anything to test your API requests,
+but if someone else retrieved your API key, they could potentially misuse it in
+your name.
+
+*/
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Places Demo</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      #map {
+        height: 100%;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <form>
+      <input type="text" id="place" placeholder="Where should we go?" />
+      <button type="submit">Submit</button>
+    </form>
+    <div id="map"></div>
+    <script>
+    var map;
+    var service;
+    var infowindow;
+    var markers = [];
+    function initMap() {
+      var mapCenter = new google.maps.LatLng(0,0);
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: mapCenter,
+        zoom: 2
+      });
+    }
+    function callback(results, status) {
+      console.log(status);
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          var place = results[i];
+          console.log(place);
+          markers.push(new google.maps.Marker({
+            position: place.geometry.location,
+            map: map,
+            title: place.name
+          }));
+        }
+      }
+    }
+    $('form').submit(function(event) {
+      markers = [];
+      var request = {
+        query: $('#place').val(),
+        fields: ['photos', 'formatted_address', 'name', 'rating', 'opening_hours', 'geometry']
+      };
+      service = new google.maps.places.PlacesService(map);
+      // service.findPlaceFromQuery(request, callback);
+      service.textSearch(request, callback);
+      event.preventDefault();
+    });
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC98pnjZkySWsG3tj98asFpCTbFiAB8X1g
+&libraries=places&callback=initMap"
+    async defer></script>
+  </body>
+</html>
