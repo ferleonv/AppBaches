@@ -1,50 +1,132 @@
-<?php
+<!DOCTYPE html >
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <title>AppBaches web client - Reportes en el mapa</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
 
-require("phpsqlajax_dbinfo.php");
+<html>
+  <body>
+    <div id="map"></div>
 
-// Start XML file, create parent node
+    <script>
+      var customLabel = {
+        restaurant: {
+          label: 'R'
+        },
+        bar: {
+          label: 'B'
+        }
+      };
 
-$dom = new DOMDocument("1.0");
-$node = $dom->createElement("markers");
-$parnode = $dom->appendChild($node);
+        function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(29.0844527, -110.9646707,17),
+          zoom: 12
+        });
+        var infoWindow = new google.maps.InfoWindow;
 
-// Opens a connection to a MySQL server
+          // Change this depending on the name of your PHP or XML file
+          downloadUrl('http://localhost/appbaches-web/reportes_new.xml', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+              var id = markerElem.getAttribute('id');
+              var name = markerElem.getAttribute('fecha');
+              var address = markerElem.getAttribute('estatus');
+              var type = markerElem.getAttribute('id_user');
+              var point = new google.maps.LatLng(
+                  parseFloat(markerElem.getAttribute('latitud')),
+                  parseFloat(markerElem.getAttribute('longitud')));
 
-$connection=mysqli_connect ('localhost', $username, $password);
-if (!$connection) {  die('Not connected : ' . mysql_error());}
+              var infowincontent = document.createElement('div');
+              var strong = document.createElement('strong');
+              strong.textContent = name
+              infowincontent.appendChild(strong);
+              infowincontent.appendChild(document.createElement('br'));
 
-// Set the active MySQL database
+              var text = document.createElement('text');
+              text.textContent = address
+              infowincontent.appendChild(text);
+              var icon = customLabel[type] || {};
+              
+              if(address == 1){
+                var marker = new google.maps.Marker({
+                  map: map,
+                  position: point,
+                  label: icon.label,
+                  icon: {
+                    url: "http://localhost/appbaches-web/media/green-dot.png"
+                  }
+                });
+              }
 
-$db_selected = mysqli_select_db($connection, $database);
-if (!$db_selected) {
-  die ('Can\'t use db : ' . mysqli_error());
-}
+              if(address == 2){
+                var marker = new google.maps.Marker({
+                  map: map,
+                  position: point,
+                  label: icon.label,
+                  icon: {
+                    url: "http://localhost/appbaches-web/media/yellow-dot.png"
+                  }
+                });
+              }
 
-// Select all the rows in the markers table
+              if(address == 3){
+                var marker = new google.maps.Marker({
+                  map: map,
+                  position: point,
+                  label: icon.label,
+                  icon: {
+                    url: "http://localhost/appbaches-web/media/red-dot.png"
+                  }
+                });
+              }
 
-$query = "SELECT * FROM reporte";
-$result = mysqli_query($connection, $query);
-if (!$result) {
-  die('Invalid query: ' . mysqli_error());
-}
+              marker.addListener('click', function() {
+                infoWindow.setContent(infowincontent);
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+        }
 
-header("Content-type: text/xml");
 
-// Iterate through the rows, adding XML nodes for each
 
-while ($row = @mysqli_fetch_assoc($result)){
-  // Add to XML document node
-  $node = $dom->createElement("marker");
-  $newnode = $parnode->appendChild($node);
-  $newnode->setAttribute("id",$row['id']);
-  $newnode->setAttribute("fecha",$row['fecha']);
-  $newnode->setAttribute("latitud", $row['latitud']);
-  $newnode->setAttribute("longitud", $row['longitud']);
-  $newnode->setAttribute("estatus", $row['estatus']);
-  $newnode->setAttribute("id_user", $row['id_user']);
-}
+      function downloadUrl(url, callback) {
+        var request = window.ActiveXObject ?
+            new ActiveXObject('Microsoft.XMLHTTP') :
+            new XMLHttpRequest;
 
-echo $dom->saveXML();
-$dom->save('reportes_new.xml');
+        request.onreadystatechange = function() {
+          if (request.readyState == 4) {
+            request.onreadystatechange = doNothing;
+            callback(request, request.status);
+          }
+        };
 
-?>
+        request.open('GET', url, true);
+        request.send(null);
+      }
+
+      function doNothing() {}
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC98pnjZkySWsG3tj98asFpCTbFiAB8X1g&callback=initMap">
+    </script>
+  </body>
+</html>
+
