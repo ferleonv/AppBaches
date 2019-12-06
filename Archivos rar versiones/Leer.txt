@@ -1,0 +1,8 @@
+Los Archivos .php coloquelos en c:\xampp\htdocs
+
+Orden cronologico de los archivos
+- La que esta en github
+- Antes del rework
+- Despues del rework
+- Registro (Funcional)
+- Con Login Funcional
