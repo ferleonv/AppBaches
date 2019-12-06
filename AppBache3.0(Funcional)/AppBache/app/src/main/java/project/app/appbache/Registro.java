@@ -45,7 +45,8 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         Dialog = new ProgressDialog(this);
 
         BT_Registro.setOnClickListener(this);
-
+        buttonLogin.setOnClickListener(this);
+        
     }
 
     private void RegisterUser(){
